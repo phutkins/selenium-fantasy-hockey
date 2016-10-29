@@ -2,7 +2,7 @@ import yaml
 
 PARAM_DESCRIPTIONS = (
     # Name,  Description,  Saved?
-    ('chromedriver_path', 'Selenium Chrome Driver installation location'),
+    ('chromedriver_path', 'Selenium Chrome Driver executable location'),
     ('team_website', 'Yahoo fantasy hockey team website'),
     ('days_to_start_active_payers', 'Days to start active players')
     # ('username', 'Yahoo username',),

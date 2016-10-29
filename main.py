@@ -31,18 +31,13 @@ def login_to_yahoo():
     # button.click()
 
 
-def chromedriver_executable_path(dirpath):
-    exe_name = 'chromedriver'
-    if sys.platform.startswith('win'):
-        exe_name = 'chromedriver.exe'
-    fullpath = os.path.join(dirpath, exe_name)
-    return fullpath
 
 
 def main():
     config = syfh_params.Config()
     config.confirm_all_params()
-    browser = webdriver.Chrome(chromedriver_executable_path(config.config['chromedriver_path']))
+    browser = webdriver.Chrome(config.config['chromedriver_path'])
+    browser.implicitly_wait(10)     # implicit wait fo 10s for all actions
 
     # attempt to go directly to the team website
     browser.get(config.config['team_website'])
@@ -54,26 +49,34 @@ def main():
         print('Day %d: Now on %s' % (i, browser.current_url))
 
         try:
-            start_active = browser.find_element_by_link_text('Start Active Players')
+            # start_active = browser.find_element_by_link_text('Start Active Players')
+            start_active = WebDriverWait(browser, 10).until(
+                EC.element_to_be_clickable((By.LINK_TEXT, 'Start Active Players'))
+            )
             print('Found <%s> element' % (start_active.text))
         except:
             print('Was not able to find Start Active Players button on page {}.'.format(browser.current_url))
 
         try:
+            # browser.execute_script("return arguments[0].scrollIntoView();", start_active)
             start_active.click()
+            print('Clicking start active element')
         except Exception as exc:
             print('Unable to click Start Active Players. {}'.format(exc))
 
         # clicking start_active causes a page reload.
         try:
             next_arrow = WebDriverWait(browser, 10).until(
-                EC.presence_of_element_located((By.CLASS_NAME, 'Js-next'))
+                EC.element_to_be_clickable((By.CLASS_NAME, 'Js-next'))
             )
+            print('Found next arrow element')
         except Exception as e:
             print('Was not able to find next arrow on page {}.'.format(browser.current_url))
 
         try:
+            # browser.execute_script("return arguments[0].scrollIntoView();", next_arrow)
             next_arrow.click()
+            print('Clicked next arrow element')
         except Exception as exc:
             print('Unable to click next arrow to get to next page. {}'.format(exc))
 

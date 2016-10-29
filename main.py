@@ -9,7 +9,7 @@ import syfh_params
 
 
 def login_to_yahoo():
-    input("Need to login to Yahoo.  Please manually log in and press <Enter> when complete")
+    input("User needs to login to Yahoo.  Press <Enter> when logged in to continue.")
     print()
     return
 
@@ -41,7 +41,7 @@ def chromedriver_executable_path(dirpath):
 
 def main():
     config = syfh_params.Config()
-    config.confirm_params()
+    config.confirm_all_params()
     browser = webdriver.Chrome(chromedriver_executable_path(config.config['chromedriver_path']))
 
     # attempt to go directly to the team website
@@ -61,8 +61,8 @@ def main():
 
         try:
             start_active.click()
-        except:
-            print('Unable to click Start Active Players')
+        except Exception as exc:
+            print('Unable to click Start Active Players. {}'.format(exc))
 
         # clicking start_active causes a page reload.
         try:
@@ -74,8 +74,8 @@ def main():
 
         try:
             next_arrow.click()
-        except:
-            pass
+        except Exception as exc:
+            print('Unable to click next arrow to get to next page. {}'.format(exc))
 
         print()
 

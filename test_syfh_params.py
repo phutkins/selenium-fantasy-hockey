@@ -54,3 +54,26 @@ class TestConfig(TestCase):
         self.assertEqual(loaded, test_params)
         loaded_again = self.config.load_params(self.param_file.name)
         self.assertEqual(loaded_again, test_params)
+
+    def test_validate_unknown_params(self):
+        test_params = {
+            'bogusparam1': 'qwerqqq',
+            'website': 'http://asdflklkjasdf'}
+        self.config.config = test_params
+        for test_param in test_params:
+            with self.assertRaises(ValueError):
+                self.config.validate_param(test_param)
+
+    def test_validate_known_params(self):
+        test_param_descs = (
+            ('knownparam1', 'description 1'),
+            ('knownparam2', 'description 2', False),
+        )
+        test_params = {
+            'knownparam1': 'qwerqqq',
+            'knownparam2': 'http://asdflklkjasdf'}
+        self.config.config = test_params
+        self.config.param_descs = test_param_descs
+        for test_param in test_params:
+            self.config.validate_param(test_param)
+
